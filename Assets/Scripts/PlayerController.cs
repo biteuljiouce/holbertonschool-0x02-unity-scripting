@@ -8,7 +8,17 @@ public class PlayerController : MonoBehaviour
     // score
     private int score = 0;
 
-    private KeyCode _currentKey;
+    private Direction _currentDir;
+    private enum Direction {
+        left,
+        right,
+        up,
+        down,
+        left_up,
+        right_up,
+        left_down,
+        right_down
+    };
 
 	// Use this for initialization
 	void Start()
@@ -20,25 +30,45 @@ public class PlayerController : MonoBehaviour
 	// Update is called once per frame
 	void Update()
 	{
-        if (Input.GetKey(KeyCode.LeftArrow))
+        // horizontal / vertical
+
+        if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
         {
-            //Debug.Log("left arrow");
-            _currentKey = KeyCode.LeftArrow;
+            _currentDir = Direction.left;
         }
-        if (Input.GetKey(KeyCode.RightArrow))
+        if (Input.GetKey(KeyCode.RightArrow) || Input.GetKey(KeyCode.D))
         {
-            //Debug.Log("right arrow");
-            _currentKey = KeyCode.RightArrow;
+            _currentDir = Direction.right;
         }
-        if (Input.GetKey(KeyCode.UpArrow))
+        if (Input.GetKey(KeyCode.UpArrow) || Input.GetKey(KeyCode.Z))
         {
-            //Debug.Log("up arrow");
-            _currentKey = KeyCode.UpArrow;
+            _currentDir = Direction.up;
         }
-        if (Input.GetKey(KeyCode.DownArrow))
+        if (Input.GetKey(KeyCode.DownArrow) || Input.GetKey(KeyCode.S))
         {
-            //Debug.Log("down arrow");
-            _currentKey = KeyCode.DownArrow;
+            _currentDir = Direction.down;
+        }
+
+        // diagonal
+
+        if (Input.GetKey(KeyCode.DownArrow) && Input.GetKey(KeyCode.RightArrow))
+        {
+            _currentDir = Direction.right_down;
+        }
+        
+        if (Input.GetKey(KeyCode.DownArrow) && Input.GetKey(KeyCode.LeftArrow))
+        {
+            _currentDir = Direction.left_down;
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow) && Input.GetKey(KeyCode.RightArrow))
+        {
+            _currentDir = Direction.right_up;
+        }
+
+        if (Input.GetKey(KeyCode.UpArrow) && Input.GetKey(KeyCode.LeftArrow))
+        {
+            _currentDir = Direction.left_down;
         }
 
     }
@@ -46,22 +76,42 @@ public class PlayerController : MonoBehaviour
     // FixedUpdate is when messing with physics
     void FixedUpdate()
 	{
-        if (_currentKey == KeyCode.LeftArrow)
+        Vector3 moves = new Vector3();
+        if (_currentDir == Direction.left)
         {
-            transform.position += new Vector3(-speed * Time.deltaTime, 0, 0);
+            moves += new Vector3(-speed * Time.deltaTime, 0, 0);
         }
-        if (_currentKey == KeyCode.RightArrow)
+        if (_currentDir == Direction.right)
         {
-            transform.position += new Vector3(speed * Time.deltaTime, 0, 0);
+            moves += new Vector3(speed * Time.deltaTime, 0, 0);
         }
-        if (_currentKey == KeyCode.UpArrow)
+        if (_currentDir == Direction.up)
         {
-            transform.position += new Vector3(0, 0, speed * Time.deltaTime);
+            moves += new Vector3(0, 0, speed * Time.deltaTime);
         }
-        if (_currentKey == KeyCode.DownArrow)
+        if (_currentDir == Direction.down)
         {
-            transform.position += new Vector3(0, 0, -speed * Time.deltaTime);
+            moves += new Vector3(0, 0, -speed * Time.deltaTime);
         }
+        if (_currentDir == Direction.right_down)
+        {
+            moves += new Vector3(speed / 1.5f * Time.deltaTime, 0, -speed / 2 * Time.deltaTime);
+        }
+
+        if (_currentDir == Direction.left_down)
+        {
+            moves += new Vector3(-speed / 1.5f * Time.deltaTime, 0, -speed / 2 * Time.deltaTime);
+        }
+
+        if (_currentDir == Direction.right_up)
+        {
+            moves += new Vector3(speed / 1.5f * Time.deltaTime, 0, speed / 2 * Time.deltaTime);
+        }
+        if (_currentDir == Direction.left_up)
+        {
+            moves += new Vector3(-speed / 1.5f * Time.deltaTime, 0, -speed / 2 * Time.deltaTime);
+        }
+        transform.position += moves;
     }
 
     void OnTriggerEnter(Collider other)
@@ -74,3 +124,5 @@ public class PlayerController : MonoBehaviour
         }
     }
 }
+
+// REFAIRE AVEC RIGIDBODY ET PHYSICS, CAR MOUVEMENT PAS SUPER FLUIDE COMME DANS les VIDEOs des énoncés
