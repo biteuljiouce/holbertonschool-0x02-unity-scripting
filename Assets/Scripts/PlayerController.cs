@@ -1,4 +1,5 @@
 ﻿using UnityEngine;
+using UnityEngine.SceneManagement;
 
 public class PlayerController : MonoBehaviour
 {
@@ -7,6 +8,10 @@ public class PlayerController : MonoBehaviour
 
     // health
     public float health;
+
+    //
+    private TeleporterController teleporterStart;
+    private TeleporterController teleporterEnd;
 
     // score
     private int score = 0;
@@ -26,14 +31,28 @@ public class PlayerController : MonoBehaviour
 	// Use this for initialization
 	void Start()
 	{
-        Debug.Log("Start");
-        speed = 10f;
+        resetPlayerData();
+    }
+
+    private void resetPlayerData()
+    {
+        speed = 15f;
         health = 5;
     }
 
 	// Update is called once per frame
 	void Update()
 	{
+        if (health == 0)
+        {
+            Debug.Log("Game over!");
+            resetPlayerData();
+            // reload scene
+            string currentSceneName = SceneManager.GetActiveScene().name;
+            SceneManager.LoadScene(currentSceneName);
+        }
+
+
         // horizontal / vertical
 
         if (Input.GetKey(KeyCode.LeftArrow) || Input.GetKey(KeyCode.Q))
@@ -131,7 +150,24 @@ public class PlayerController : MonoBehaviour
             health--;
             Debug.Log("Health: " + health);
         }
+        else if (other.tag == "Goal")
+        {
+            Debug.Log("You win!");
+        } if (other.tag == "Goal")
+        {
+            Debug.Log("You win!");
+        }
+        else if (other.tag == "Teleporter")
+        {
+            teleporterStart = other.gameObject.GetComponent("TeleporterController") as TeleporterController;
+            teleporterEnd = teleporterStart.TeleporterTarget.GetComponent("TeleporterController") as TeleporterController;
+            teleporterEnd.inService = true;
+
+            if (!teleporterStart.inService)
+            {
+                transform.position = teleporterEnd.transform.position;
+            }
+                
+        }
     }
 }
-
-// REFAIRE AVEC RIGIDBODY ET PHYSICS, CAR MOUVEMENT PAS SUPER FLUIDE COMME DANS les VIDEOs des énoncés
