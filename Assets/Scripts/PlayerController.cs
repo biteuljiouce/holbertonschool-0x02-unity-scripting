@@ -5,6 +5,9 @@ public class PlayerController : MonoBehaviour
     // move speed
     public float speed;
 
+    // health
+    public float health = 5;
+
     // score
     private int score = 0;
 
@@ -119,8 +122,13 @@ public class PlayerController : MonoBehaviour
         if (other.tag == "Pickup")
         { 
             score++;
-            Debug.Log("score: " + score);
+            Debug.Log("Score: " + score);
             Object.Destroy(other.gameObject);
+        }
+        else if (other.tag == "Trap")
+        {
+            health--;
+            Debug.Log("Health: " + score);
         }
     }
 }
