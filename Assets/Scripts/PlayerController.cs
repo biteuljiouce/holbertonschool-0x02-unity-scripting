@@ -161,9 +161,9 @@ public class PlayerController : MonoBehaviour
         {
             teleporterStart = other.gameObject.GetComponent("TeleporterController") as TeleporterController;
             teleporterEnd = teleporterStart.TeleporterTarget.GetComponent("TeleporterController") as TeleporterController;
-            teleporterEnd.inService = true;
+            teleporterEnd.inService = false;
 
-            if (!teleporterStart.inService)
+            if (teleporterStart.inService)
             {
                 transform.position = teleporterEnd.transform.position;
             }
