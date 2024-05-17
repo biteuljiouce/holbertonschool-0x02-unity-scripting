@@ -6,7 +6,7 @@ public class PlayerController : MonoBehaviour
     public float speed;
 
     // health
-    public float health = 5;
+    public float health;
 
     // score
     private int score = 0;
@@ -28,6 +28,7 @@ public class PlayerController : MonoBehaviour
 	{
         Debug.Log("Start");
         speed = 10f;
+        health = 5;
     }
 
 	// Update is called once per frame
@@ -128,7 +129,7 @@ public class PlayerController : MonoBehaviour
         else if (other.tag == "Trap")
         {
             health--;
-            Debug.Log("Health: " + score);
+            Debug.Log("Health: " + health);
         }
     }
 }
